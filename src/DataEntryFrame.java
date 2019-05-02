@@ -211,14 +211,16 @@ public class DataEntryFrame extends JFrame
 			formSelect.setModel(newComboBoxModel);
 			formSelect.setSelectedIndex(select);
 
+		
 			// TODO: display an error message if setting the values failed. Else, display a success message.
 			if(!(datalist.get(select).setValues(firstName.getText(), middleInitial.getText().charAt(0), lastName.getText(), displayName.getText(),
 					SSN.getText(), phone.getText(), email.getText(), address.getText(), spanel.getSignature())))
 			{
-				errorField.setVisible(false);
+				errorField.setText("Unable to save properly");
+				errorField.setVisible(true);
 			}
 			else {
-				errorField.setVisible(true);
+				errorField.setVisible(false);
 			}
 		});
 
@@ -238,6 +240,7 @@ public class DataEntryFrame extends JFrame
 		// Add in the error message field:
 		this.errorField.setEditable(false);
 		// TODO: add error field to frame
+		this.add(errorField); 
 
 		// Add in the import/export panel:
 		JButton importButton = new JButton("Import");
