@@ -280,6 +280,12 @@ public class DataEntryFrame extends JFrame
 			
 			try(ObjectInputStream iStream = new ObjectInputStream(new FileInputStream(replace))) {
 				datalist = (ArrayList<FormData>)iStream.readObject();
+				
+				int select = 0; 
+				DefaultComboBoxModel<String> newModelCBox = getComboBoxModel(datalist); 
+				formSelect.setModel(newModelCBox);
+				formSelect.setSelectedIndex(select);
+				this.setVisuals(datalist.get(select));
 			}
 			catch (Exception ex) {
 				errorField.setText("Was unable to successfully import selected file");
@@ -308,6 +314,12 @@ public class DataEntryFrame extends JFrame
 			
 			try(ObjectOutputStream oStream = new ObjectOutputStream(new FileOutputStream(bringIn))) {
 				datalist = (ArrayList<FormData>)((ObjectInput) oStream).readObject();
+				
+				int select = 0; 
+				DefaultComboBoxModel<String> newModelCBox = getComboBoxModel(datalist); 
+				formSelect.setModel(newModelCBox);
+				formSelect.setSelectedIndex(select);
+				this.setVisuals(datalist.get(select));
 			}
 			catch (Exception exc) {
 				errorField.setText("Was unable to successfully export selected file");
