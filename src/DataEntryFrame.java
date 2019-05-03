@@ -4,7 +4,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +125,7 @@ public class DataEntryFrame extends JFrame
 	 */
 	private JTextField errorField = new JTextField("No Errors");
 
+	@SuppressWarnings("unchecked")
 	public DataEntryFrame()
 	{
 		this.setLayout(new GridLayout(7, 1));
@@ -232,6 +236,17 @@ public class DataEntryFrame extends JFrame
 		resetForm.addActionListener((e) -> {
 			int select = formSelect.getSelectedIndex();
 			// TODO: reset the values on the selected form data
+			firstName.setText("");
+			middleInitial.setText("");
+			lastName.setText("");
+			displayName.setText("");
+			SSN.setText("");
+			phone.setText("");
+			email.setText("");
+			address.setText("");
+			spanel.setSignature(new ArrayList<Point>());
+			spanel.repaint(); 
+			
 			this.setVisuals(datalist.get(select));
 		});
 
@@ -285,15 +300,31 @@ public class DataEntryFrame extends JFrame
 
 			JFileChooser fileChoose = new JFileChooser("d:");
 			fileChoose.showSaveDialog(null); 
-			File replace = fileChoose.getSelectedFile();  
+			File bringIn = fileChoose.getSelectedFile();  
 			
 			// TODO: Choose a file (hint, use JFileChooser):
 			// TODO: export datalist from a file (hint, use file.getAbsolutePath()):
 			// TODO: display error message on fail, else display success message
+			
+			try(ObjectOutputStream oStream = new ObjectOutputStream(new FileOutputStream(bringIn))) {
+				datalist = (ArrayList<FormData>)((ObjectInput) oStream).readObject();
+			}
+			catch (Exception exc) {
+				errorField.setText("Was unable to successfully export selected file");
+				this.add(errorField); 
+			}
 		});
 
+		
+		JPanel impExp = new JPanel(new GridLayout(1, 2));
 		// TODO: add import/export to panel and add to frame
-
+		impExp.add(importButton); 
+	//	formHandling.add(exportButton); 
+		impExp.add(exportButton);
+		this.add(impExp); 
+		
+		
+		
 		// JFrame basics:
 		this.setTitle("Example Form Fillout");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
